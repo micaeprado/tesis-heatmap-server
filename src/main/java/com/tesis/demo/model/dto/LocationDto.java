@@ -1,7 +1,5 @@
 package com.tesis.demo.model.dto;
 
-import com.tesis.demo.model.Point;
-
 import java.util.List;
 
 public class LocationDto {

@@ -1,22 +1,23 @@
 package com.tesis.demo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 
 @Entity
-@Table(name = "point")
-public class Point {
+@Table(name = "point_zone")
+public class PointZone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     protected double lat;
     protected double lng;
+    @ManyToOne
+    @JsonIgnoreProperties(value = "points", allowSetters = true)
+    private Zone zone;
 
-    public Point() {
+    public PointZone() {
     }
 
     public Long getId() {
@@ -27,7 +28,7 @@ public class Point {
         this.id = id;
     }
 
-    public Point lat(double lat) {
+    public PointZone lat(double lat) {
         this.lat = lat;
         return this;
     }
@@ -39,7 +40,7 @@ public class Point {
         this.lat = lat;
     }
 
-    public Point lng(double lng) {
+    public PointZone lng(double lng) {
         this.lng = lng;
         return this;
     }
@@ -50,5 +51,18 @@ public class Point {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public PointZone zone(Zone zone) {
+        this.zone = zone;
+        return this;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 }
