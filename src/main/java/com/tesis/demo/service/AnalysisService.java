@@ -38,13 +38,13 @@ public class AnalysisService {
     }*/
 
     public List<WeightedLoc> getMapElements(String fileName, String fieldFilter, String fieldValueFilter,
-                                            Integer function, String fieldValueFilterFunction) {
+                                            String function, String fieldValueFilterFunction) {
         List<Geodata> filteredElements = geodataService.getFilteredElements(fileName, fieldFilter, fieldValueFilter);
         return getElementsAnalyzed(filteredElements, function, fieldValueFilterFunction);
     }
 
-    public List<WeightedLoc> getElementsAnalyzed(List<Geodata> geodata, Integer function, String fieldValueFilterFunction) {
-        double result = getResult(function, geodata);
+    public List<WeightedLoc> getElementsAnalyzed(List<Geodata> geodata, String function, String fieldValueFilterFunction) {
+        double result = getResult(function, geodata, fieldValueFilterFunction);
         List<WeightedLoc> weightedLocs = new ArrayList<>();
         for (Geodata element: geodata) {
             Map<String, String> field = element.getFields();
@@ -56,38 +56,33 @@ public class AnalysisService {
         return weightedLocs;
     }
 
-    private double getResult(Integer idFunction, List<Geodata> geodata) {
-            if(idFunction == FunctionType.FUNCTION_STANDARD_DEVIATION.getId()) {
-                return getStandardDeviation(geodata);
+    private double getResult(String idFunction, List<Geodata> geodata, String field) {
+            if(FunctionType.FUNCTION_STANDARD_DEVIATION.getName().equals(idFunction)) {
+                return getStandardDeviation(geodata, field);
             }
-            else if(idFunction.equals(FunctionType.FUNCTION_ARITHMETIC_AVERAGE.getId())) {
-                return getArithmeticAverage(geodata);
+            else if(FunctionType.FUNCTION_ARITHMETIC_AVERAGE.getName().equals(idFunction)) {
+                return getArithmeticAverage(geodata, field);
             }
         return 0;
     }
 
 
-    private double getStandardDeviation(List<Geodata> geodata) {
-        return getDescriptiveStatistics(geodata).getStandardDeviation();
+    private double getStandardDeviation(List<Geodata> geodata, String field) {
+        return getDescriptiveStatistics(geodata, field).getStandardDeviation();
     }
 
-    private double getArithmeticAverage(List<Geodata> geodata) {
-        return getDescriptiveStatistics(geodata).getMean();
+    private double getArithmeticAverage(List<Geodata> geodata, String field) {
+        return getDescriptiveStatistics(geodata, field).getMean();
     }
 
-    private DescriptiveStatistics getDescriptiveStatistics(List<Geodata> geodata) {
+    private DescriptiveStatistics getDescriptiveStatistics(List<Geodata> geodata, String field) {
         DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
 
         for (Geodata element : geodata) {
-            descriptiveStatistics.addValue(getSeconds(1, 1));
-            //descriptiveStatistics.addValue(getSeconds(element.getEndTime().getTime(), element.getStartTime().getTime()));
+            descriptiveStatistics.addValue(Double.parseDouble(element.getFields().get(field)));
         }
 
         return descriptiveStatistics;
-    }
-
-    private double getSeconds(double value1, double value2) {
-        return (value1 - value2) / 1000;
     }
 
     public Set<String> getFunctions() {

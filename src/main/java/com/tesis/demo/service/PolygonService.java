@@ -64,7 +64,7 @@ public class PolygonService {
     }
 
     public Zone createZone(ZoneDto zoneDto) {
-        Zone zone = new Zone();
+        Zone zone = new Zone().name(zoneDto.getName());
 
         Zone newZone = zoneRepository.save(zone);
         createPoints(zoneDto.getPoints(), newZone);

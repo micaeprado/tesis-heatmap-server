@@ -63,10 +63,9 @@ public class AnalysisController {
     public List<WeightedLoc> getMapElements(@RequestParam("file-name") String fileName,
                                             @RequestParam("field-filter") String fieldFilter,
                                             @RequestParam("field-value-filter") String fieldValueFilter,
-                                            @RequestParam("function") Integer function,
+                                            @RequestParam("function") String function,
                                             @RequestParam("field-value-function") String fieldValueFilterFunction) {
         return analysisService.getMapElements(fileName, fieldFilter, fieldValueFilter, function, fieldValueFilterFunction);
     }
-
 
 }
