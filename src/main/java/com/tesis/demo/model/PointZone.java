@@ -24,6 +24,11 @@ public class PointZone {
         return id;
     }
 
+    public PointZone id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

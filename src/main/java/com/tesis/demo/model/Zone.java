@@ -18,7 +18,7 @@ public class Zone {
     private Long id;
     protected String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "zone", allowSetters = true)
     protected List<PointZone> points;
@@ -55,5 +55,5 @@ public class Zone {
         this.points = points;
     }
 
-
 }
+

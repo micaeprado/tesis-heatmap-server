@@ -1,5 +1,6 @@
 package com.tesis.demo.service;
 
+import com.tesis.demo.model.Point;
 import com.tesis.demo.model.PointZone;
 import com.tesis.demo.model.Zone;
 import com.tesis.demo.model.dto.PointZoneDto;
@@ -35,7 +36,7 @@ public class PolygonService {
                  .collect(Collectors.toList());
     }
 
-    private List<PointZoneDto> getPointsDtoByZone(Zone zone) {
+    public List<PointZoneDto> getPointsDtoByZone(Zone zone) {
         List<PointZone> pointZones = pointZoneRepository.getAllByZone(zone);
         return pointZones.stream()
                 .map(this::mapperPointZoneToDTO)
@@ -59,8 +60,7 @@ public class PolygonService {
 
     public Zone getZoneById(Long id) {
         Optional<Zone> searchedZone = zoneRepository.findById(id);
-        Zone zone = searchedZone.orElseThrow(NoSuchElementException::new);
-        return zone;
+        return searchedZone.orElseThrow(NoSuchElementException::new);
     }
 
     public Zone createZone(ZoneDto zoneDto) {
@@ -82,5 +82,18 @@ public class PolygonService {
             pointZones.add(newPoint);
         }
         return pointZones;
+    }
+
+    public boolean isPointInsideZone(Point point, Zone zone) {
+        List<PointZoneDto> points = getPointsDtoByZone(zone);
+        int i, j;
+        for (i = 0, j = points.size() - 1; i < points.size(); j = i++){
+            if (((points.get(i).getLng() > point.getLng()) != (points.get(j).getLng() > point.getLng()))
+                    && (point.getLat() < (points.get(j).getLat() - points.get(i).getLat()) *
+                    (point.getLng() - points.get(i).getLng()) / (points.get(j).getLng() - points.get(i).getLng()) + points.get(i).getLat())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

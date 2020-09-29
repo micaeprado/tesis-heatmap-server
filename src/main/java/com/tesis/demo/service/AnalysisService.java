@@ -4,6 +4,8 @@ import com.tesis.demo.enumeration.FunctionType;
 import com.tesis.demo.model.Geodata;
 import com.tesis.demo.model.Point;
 import com.tesis.demo.model.WeightedLoc;
+import com.tesis.demo.model.Zone;
+import com.tesis.demo.model.dto.PointZoneDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.modelmapper.ModelMapper;
@@ -21,6 +23,7 @@ public class AnalysisService {
 
     protected final ModelMapper modelMapper;
     protected final GeodataService geodataService;
+    protected final PolygonService polygonService;
 
    /* public List<WeightedLoc> getElementsAnalyzed(Integer idFunction, String fileName) {
         List<Geodata> geodata = geodataService.getGeodataByFileName(fileName);
@@ -38,20 +41,28 @@ public class AnalysisService {
     }*/
 
     public List<WeightedLoc> getMapElements(String fileName, String fieldFilter, String fieldValueFilter,
-                                            String function, String fieldValueFilterFunction) {
+                                            String function, String fieldValueFilterFunction, Long zone) {
         List<Geodata> filteredElements = geodataService.getFilteredElements(fileName, fieldFilter, fieldValueFilter);
-        return getElementsAnalyzed(filteredElements, function, fieldValueFilterFunction);
+        return getElementsAnalyzed(filteredElements, function, fieldValueFilterFunction, zone);
     }
 
-    public List<WeightedLoc> getElementsAnalyzed(List<Geodata> geodata, String function, String fieldValueFilterFunction) {
+    public List<WeightedLoc> getElementsAnalyzed(List<Geodata> geodata, String function, String fieldValueFilterFunction, Long idZone) {
+        Zone zone = polygonService.getZoneById(idZone);
         double result = getResult(function, geodata, fieldValueFilterFunction);
         List<WeightedLoc> weightedLocs = new ArrayList<>();
         for (Geodata element: geodata) {
-            Map<String, String> field = element.getFields();
-            double weight = Double.parseDouble(field.get(fieldValueFilterFunction))/result;
-            Point point = new Point().lat(element.getLat()).lng(element.getLng());
-            WeightedLoc weightedLoc = new WeightedLoc().location(point).weight(weight);
-            weightedLocs.add(weightedLoc);
+            PointZoneDto point = new PointZoneDto().lat(element.getLat()).lng(element.getLng());
+            Point point2 = new Point().lat(element.getLat()).lng(element.getLng());
+
+            //if (polygonService.isPointInsideZone(point, zone)) {
+            List<PointZoneDto> points = polygonService.getPointsDtoByZone(zone);
+
+            if (ComparePoints.isInside(points, point)) {
+                    Map<String, String> field = element.getFields();
+                double weight = Double.parseDouble(field.get(fieldValueFilterFunction))/result;
+                WeightedLoc weightedLoc = new WeightedLoc().location(point2).weight(weight);
+                weightedLocs.add(weightedLoc);
+            }
         }
         return weightedLocs;
     }

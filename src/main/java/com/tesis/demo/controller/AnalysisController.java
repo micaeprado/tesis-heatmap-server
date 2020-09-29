@@ -64,8 +64,9 @@ public class AnalysisController {
                                             @RequestParam("field-filter") String fieldFilter,
                                             @RequestParam("field-value-filter") String fieldValueFilter,
                                             @RequestParam("function") String function,
-                                            @RequestParam("field-value-function") String fieldValueFilterFunction) {
-        return analysisService.getMapElements(fileName, fieldFilter, fieldValueFilter, function, fieldValueFilterFunction);
+                                            @RequestParam("field-value-function") String fieldValueFilterFunction,
+                                            @RequestParam("zone") Long zone) {
+        return analysisService.getMapElements(fileName, fieldFilter, fieldValueFilter, function, fieldValueFilterFunction, zone);
     }
 
 }
