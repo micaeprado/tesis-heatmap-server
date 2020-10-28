@@ -20,6 +20,6 @@ public class FileData {
     public String fileName;
 
     @Field("header")
-    public List<String> header;
+    public List<Header> header; //header con su tipo
 
 }

@@ -1,6 +1,7 @@
 package com.tesis.demo.service;
 
 import com.tesis.demo.model.Geodata;
+import com.tesis.demo.model.FieldFilter;
 import com.tesis.demo.repository.GeodataDAO;
 import com.tesis.demo.repository.GeodataRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,12 @@ public class GeodataService {
         return geodataDAO.findDistinctByFileNameAndField(name, header);
     }
 
-    public List<Geodata> getFilteredElements(String fileName, String field, String fieldValue) {
-        return geodataRepository.findByFileNameAndFieldAndFieldValue(fileName, field, fieldValue);
+    public List<Geodata> getFilteredElements(String fileName, List<FieldFilter> fieldFilters) {
+        List<Geodata> geodata = geodataRepository.findByFileName(fileName);
+        for (FieldFilter fieldFilter : fieldFilters) {
+            //fitrar
+        }
+        return geodata;
     }
 
 

@@ -2,6 +2,7 @@ package com.tesis.demo.service;
 
 import com.tesis.demo.enumeration.FunctionType;
 import com.tesis.demo.model.Geodata;
+import com.tesis.demo.model.Layer;
 import com.tesis.demo.model.Point;
 import com.tesis.demo.model.WeightedLoc;
 import com.tesis.demo.model.Zone;
@@ -40,10 +41,9 @@ public class AnalysisService {
         return weightedLocs;
     }*/
 
-    public List<WeightedLoc> getMapElements(String fileName, String fieldFilter, String fieldValueFilter,
-                                            String function, String fieldValueFilterFunction, Long zone) {
-        List<Geodata> filteredElements = geodataService.getFilteredElements(fileName, fieldFilter, fieldValueFilter);
-        return getElementsAnalyzed(filteredElements, function, fieldValueFilterFunction, zone);
+    public List<WeightedLoc> getMapElements(Layer layer) {
+        List<Geodata> filteredElements = geodataService.getFilteredElements(layer.getFileName(), layer.getFieldFilters());
+        return getElementsAnalyzed(filteredElements, layer.getFunctionName(), layer.getFieldToCalculate(), layer.getZone().getId());
     }
 
     public List<WeightedLoc> getElementsAnalyzed(List<Geodata> geodata, String function, String fieldValueFilterFunction, Long idZone) {

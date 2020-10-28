@@ -1,7 +1,7 @@
 package com.tesis.demo.controller;
 
 import com.tesis.demo.model.FileData;
-import com.tesis.demo.model.Geodata;
+import com.tesis.demo.model.Layer;
 import com.tesis.demo.model.WeightedLoc;
 import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.FileDataService;
@@ -46,12 +46,12 @@ public class AnalysisController {
         return geodataService.getFiltersByHeader(fileName, header);
     }
 
-    @GetMapping("/elements")
+  /*  @GetMapping("/elements")
     public List<Geodata> getFilteredElements(@RequestParam("file-name") String fileName,
                                              @RequestParam("field") String field,
                                              @RequestParam("field-value") String fieldValue) {
         return geodataService.getFilteredElements(fileName, field, fieldValue);
-    }
+    }*/
 
     @GetMapping("/functions")
     public Set<String> getFunctions() {
@@ -60,6 +60,11 @@ public class AnalysisController {
 
 
     @GetMapping("/map")
+    public List<WeightedLoc> getMapElements(@RequestParam("layer") Layer layer) {
+        return analysisService.getMapElements(layer);
+    }
+
+   /* @GetMapping("/map")
     public List<WeightedLoc> getMapElements(@RequestParam("file-name") String fileName,
                                             @RequestParam("field-filter") String fieldFilter,
                                             @RequestParam("field-value-filter") String fieldValueFilter,
@@ -67,6 +72,6 @@ public class AnalysisController {
                                             @RequestParam("field-value-function") String fieldValueFilterFunction,
                                             @RequestParam("zone") Long zone) {
         return analysisService.getMapElements(fileName, fieldFilter, fieldValueFilter, function, fieldValueFilterFunction, zone);
-    }
+    }*/
 
 }

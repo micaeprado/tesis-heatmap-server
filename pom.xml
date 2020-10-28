@@ -83,6 +83,11 @@
 			<version>1.18.12</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.6</version>
+		</dependency>
     </dependencies>
 
 	<build>
