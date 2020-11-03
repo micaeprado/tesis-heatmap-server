@@ -1,10 +1,12 @@
 package com.tesis.demo.controller;
 
 import com.tesis.demo.model.FileData;
+import com.tesis.demo.model.Filter;
 import com.tesis.demo.model.Layer;
 import com.tesis.demo.model.WeightedLoc;
 import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.FileDataService;
+import com.tesis.demo.service.FilterService;
 import com.tesis.demo.service.GeodataService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,7 +29,7 @@ public class AnalysisController {
     protected final ModelMapper modelMapper;
     protected final GeodataService geodataService;
     protected final FileDataService fileDataService;
-
+    protected final FilterService filterService;
 
     /*@GetMapping("/{idFunction}")
     public List<WeightedLoc> getElementsAnalyzed(@PathVariable Integer idFunction){
@@ -40,10 +42,16 @@ public class AnalysisController {
         return fileDataService.getAllFileData();
     }
 
+
     @GetMapping("/filter")
     public List<String> getFilters(@RequestParam("file-name") String fileName,
                                    @RequestParam("header") String header) {
         return geodataService.getFiltersByHeader(fileName, header);
+    }
+
+    @GetMapping("/filters")
+    public List<Filter> getFilters() {
+        return filterService.getAllFilters();
     }
 
   /*  @GetMapping("/elements")

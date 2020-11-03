@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +39,10 @@ public class DataLoaderService {
         for (int i=0; i<header.length; i++) {
             if (header[i].equals(latitude)){
                 latPos = i;
+                fieldTypes.add(null);
             } else if (header[i].equals(longitude)){
                 lngPos = i;
+                fieldTypes.add(null);
             } else {
                 headers.add(header[i]);
                 fieldTypes.add(Header.builder()
@@ -61,7 +65,7 @@ public class DataLoaderService {
             geodataService.saveGeodata(file.getOriginalFilename(), Double.parseDouble(csv.get(i)[latPos]),
                     Double.parseDouble(csv.get(i)[lngPos]), fields);
         }
-        fileDataService.saveFileData(file.getOriginalFilename(), fieldTypes);
+        fileDataService.saveFileData(file.getOriginalFilename(), fieldTypes.stream().filter(Objects::nonNull).collect(Collectors.toList()));
     }
 
     private ObjectType getFieldType(ObjectType currentFieldType, String fieldValue) {

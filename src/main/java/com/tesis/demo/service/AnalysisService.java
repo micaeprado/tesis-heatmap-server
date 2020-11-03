@@ -102,4 +102,5 @@ public class AnalysisService {
         functions.add(FunctionType.FUNCTION_ARITHMETIC_AVERAGE.getName());
         return functions;
     }
+
 }

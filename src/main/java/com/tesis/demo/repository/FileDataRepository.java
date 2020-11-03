@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface FileDataRepository extends MongoRepository<FileData, String> {
 
     Optional<FileData> findById(String id);
- }
+
+}

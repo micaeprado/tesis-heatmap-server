@@ -30,5 +30,4 @@ public class FileDataService {
     public List<FileData> getAllFileData() {
         return fileDataRepository.findAll();
     }
-
 }
