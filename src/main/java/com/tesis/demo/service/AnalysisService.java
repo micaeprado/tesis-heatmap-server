@@ -6,7 +6,11 @@ import com.tesis.demo.model.Layer;
 import com.tesis.demo.model.Point;
 import com.tesis.demo.model.WeightedLoc;
 import com.tesis.demo.model.Zone;
+import com.tesis.demo.model.dto.FieldFilterDto;
+import com.tesis.demo.model.dto.LayerDto;
 import com.tesis.demo.model.dto.PointZoneDto;
+import com.tesis.demo.model.mapper.FieldFilterMapper;
+import com.tesis.demo.model.mapper.LayerMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.modelmapper.ModelMapper;
@@ -25,6 +29,8 @@ public class AnalysisService {
     protected final ModelMapper modelMapper;
     protected final GeodataService geodataService;
     protected final PolygonService polygonService;
+    protected final LayerService layerService;
+    protected final FieldFilterService fieldFilterService;
 
    /* public List<WeightedLoc> getElementsAnalyzed(Integer idFunction, String fileName) {
         List<Geodata> geodata = geodataService.getGeodataByFileName(fileName);
@@ -41,8 +47,10 @@ public class AnalysisService {
         return weightedLocs;
     }*/
 
-    public List<WeightedLoc> getMapElements(Layer layer) {
-        List<Geodata> filteredElements = geodataService.getFilteredElements(layer.getFileName(), layer.getFieldFilters());
+    public List<WeightedLoc> getMapElements(LayerDto layer) {
+        Layer savedLayer = layerService.save(LayerMapper.toEntity(layer));
+        List<FieldFilterDto> savedFieldFilter = fieldFilterService.saveAll(FieldFilterMapper.fieldFiltersDTOsToFieldFilters(layer.getFieldFilters()), savedLayer);
+        List<Geodata> filteredElements = geodataService.getFilteredElements(layer.getFileName(), savedFieldFilter);
         return getElementsAnalyzed(filteredElements, layer.getFunctionName(), layer.getFieldToCalculate(), layer.getZone().getId());
     }
 

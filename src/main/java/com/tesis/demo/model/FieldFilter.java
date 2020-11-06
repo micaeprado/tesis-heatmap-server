@@ -10,7 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Arrays;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -29,7 +32,19 @@ public class FieldFilter {
     @Column(name = "field")
     public String field;
 
-    @Column(name = "value_to_filter")
-    public String valueToFilter;
+    @Column(name = "values_to_filter")
+    public String valuesToFilter;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "fieldFilters", allowSetters = true)
+    public Layer layer;
+
+    public List<String> getValuesToFilter() {
+        return Arrays.asList(valuesToFilter.split(","));
+    }
+
+    public void setValuesToFilter(List<String> list) {
+        valuesToFilter = String.join(",", list);
+    }
 
 }

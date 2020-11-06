@@ -2,8 +2,8 @@ package com.tesis.demo.controller;
 
 import com.tesis.demo.model.FileData;
 import com.tesis.demo.model.Filter;
-import com.tesis.demo.model.Layer;
 import com.tesis.demo.model.WeightedLoc;
+import com.tesis.demo.model.dto.LayerDto;
 import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.FileDataService;
 import com.tesis.demo.service.FilterService;
@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,8 +69,8 @@ public class AnalysisController {
     }
 
 
-    @GetMapping("/map")
-    public List<WeightedLoc> getMapElements(@RequestParam("layer") Layer layer) {
+    @PostMapping("/map")
+    public List<WeightedLoc> getMapElements(@RequestBody LayerDto layer) {
         return analysisService.getMapElements(layer);
     }
 
