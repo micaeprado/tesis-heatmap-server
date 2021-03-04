@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -12,6 +13,8 @@ import java.util.List;
 public class LayerDto {
 
     public Long id;
+
+    public String name;
 
     @JsonProperty("fileName")
     public String fileName;
@@ -24,6 +27,8 @@ public class LayerDto {
 
     @JsonProperty("zone")
     public ZoneDto zone;
+
+    public LocalDateTime creationDate;
 
     @JsonProperty("fieldFilters")
     public List<FieldFilterDto> fieldFilters;

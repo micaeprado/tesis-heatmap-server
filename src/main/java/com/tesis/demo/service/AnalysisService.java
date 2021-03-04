@@ -9,6 +9,7 @@ import com.tesis.demo.model.Zone;
 import com.tesis.demo.model.dto.FieldFilterDto;
 import com.tesis.demo.model.dto.LayerDto;
 import com.tesis.demo.model.dto.PointZoneDto;
+import com.tesis.demo.model.dto.ZoneDto;
 import com.tesis.demo.model.mapper.FieldFilterMapper;
 import com.tesis.demo.model.mapper.LayerMapper;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class AnalysisService {
     }
 
     public List<WeightedLoc> getElementsAnalyzed(List<Geodata> geodata, String function, String fieldValueFilterFunction, Long idZone) {
-        Zone zone = polygonService.getZoneById(idZone);
+        ZoneDto zone = polygonService.getZoneById(idZone);
         double result = getResult(function, geodata, fieldValueFilterFunction);
         List<WeightedLoc> weightedLocs = new ArrayList<>();
         for (Geodata element: geodata) {

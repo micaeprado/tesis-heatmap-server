@@ -1,20 +1,22 @@
 package com.tesis.demo.service;
 
-import com.tesis.demo.model.Point;
 import com.tesis.demo.model.PointZone;
 import com.tesis.demo.model.Zone;
 import com.tesis.demo.model.dto.PointZoneDto;
 import com.tesis.demo.model.dto.ZoneDto;
+import com.tesis.demo.model.dto.toDelete.PointDto;
+import com.tesis.demo.model.mapper.PointMapper;
+import com.tesis.demo.model.mapper.ZoneMapper;
 import com.tesis.demo.repository.PointZoneRepository;
 import com.tesis.demo.repository.ZoneRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PolygonService {
@@ -30,61 +32,41 @@ public class PolygonService {
     }
 
     public List<ZoneDto> getAllZones() {
-         List<Zone> zones = zoneRepository.findAll();
-         return zones.stream()
-                 .map(this::mapperZoneToDTO)
-                 .collect(Collectors.toList());
+         return ZoneMapper.toDTOList(zoneRepository.findAll());
     }
 
-    public List<PointZoneDto> getPointsDtoByZone(Zone zone) {
-        List<PointZone> pointZones = pointZoneRepository.getAllByZone(zone);
-        return pointZones.stream()
-                .map(this::mapperPointZoneToDTO)
-                .collect(Collectors.toList());
+    public Page<ZoneDto> getAllZones(Pageable pageable) {
+        return zoneRepository.findAll(pageable)
+                .map(ZoneMapper::toDto);
     }
 
-    private PointZoneDto mapperPointZoneToDTO(PointZone pointZone) {
-        return new PointZoneDto()
-                .id(pointZone.getId())
-                .lat(pointZone.getLat())
-                .lng(pointZone.getLng());
+    public List<PointZoneDto> getPointsDtoByZone(ZoneDto zone) {
+        return PointMapper.toDTOList(pointZoneRepository.getAllByZone(ZoneMapper.toEntity(zone)));
     }
 
-    private ZoneDto mapperZoneToDTO(Zone zone) {
-        List<PointZoneDto> pointsDto = getPointsDtoByZone(zone);
-        return new ZoneDto()
-                .id(zone.getId())
-                .name(zone.getName())
-                .points(pointsDto);
-    }
-
-    public Zone getZoneById(Long id) {
-        Optional<Zone> searchedZone = zoneRepository.findById(id);
-        return searchedZone.orElseThrow(NoSuchElementException::new);
+    public ZoneDto getZoneById(Long id) {
+        Zone zone = zoneRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return ZoneMapper.toDto(zone);
     }
 
     public Zone createZone(ZoneDto zoneDto) {
-        Zone zone = new Zone().name(zoneDto.getName());
-
-        Zone newZone = zoneRepository.save(zone);
-        createPoints(zoneDto.getPoints(), newZone);
+        Zone newZone = zoneRepository.save(ZoneMapper.toEntity(zoneDto));
+        createPoints(zoneDto.getPoints(), ZoneMapper.toDto(newZone));
         return newZone;
     }
 
-    private List<PointZone> createPoints(List<PointZoneDto> points, Zone zone) {
+    private List<PointZone> createPoints(List<PointZoneDto> points, ZoneDto zone) {
         List<PointZone> pointZones = new ArrayList<>();
         for (PointZoneDto pointDto: points) {
-            PointZone point = new PointZone()
-                    .lat(pointDto.getLat())
-                    .lng(pointDto.getLng())
-                    .zone(zone);
-            PointZone newPoint = pointZoneRepository.save(point);
+            PointZone pointZone = PointMapper.toEntity(pointDto);
+            pointZone.setZone(ZoneMapper.toEntity(zone));
+            PointZone newPoint = pointZoneRepository.save(pointZone);
             pointZones.add(newPoint);
         }
         return pointZones;
     }
 
-    public boolean isPointInsideZone(Point point, Zone zone) {
+    public boolean isPointInsideZone(PointDto point, ZoneDto zone) {
         List<PointZoneDto> points = getPointsDtoByZone(zone);
         int i, j;
         for (i = 0, j = points.size() - 1; i < points.size(); j = i++){

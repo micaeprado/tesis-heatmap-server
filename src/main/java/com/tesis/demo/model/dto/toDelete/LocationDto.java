@@ -1,4 +1,4 @@
-package com.tesis.demo.model.dto;
+package com.tesis.demo.model.dto.toDelete;
 
 import java.util.List;
 

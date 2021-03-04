@@ -5,9 +5,7 @@ public class PointZoneDto {
     protected Long id;
     protected double lat;
     protected double lng;
-
-    public PointZoneDto() {
-    }
+    protected ZoneDto zone;
 
     public Long getId() {
         return id;
@@ -46,5 +44,18 @@ public class PointZoneDto {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public ZoneDto getZone() {
+        return zone;
+    }
+
+    public PointZoneDto zone(ZoneDto zone) {
+        this.zone = zone;
+        return this;
+    }
+
+    public void setZone(ZoneDto zone) {
+        this.zone = zone;
     }
 }

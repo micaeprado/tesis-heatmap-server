@@ -15,6 +15,7 @@ public class LayerMapper {
                 .fileName(layer.getFileName())
                 .functionName(layer.getFunctionName())
                 .fieldToCalculate(layer.getFieldToCalculate())
+               // .zone(ZoneMapper.toDto(layer.getZone()))
                 .build();
 
     }
@@ -29,6 +30,7 @@ public class LayerMapper {
                 .fileName(layerDto.getFileName())
                 .functionName(layerDto.getFunctionName())
                 .fieldToCalculate(layerDto.getFieldToCalculate())
+                //.zone(ZoneMapper.toEntity(layerDto.getZone()))
                 .build();
 
     }

@@ -37,6 +37,7 @@ public class DataLoaderService {
         List<Header> fieldTypes = new ArrayList<>();
 
         for (int i=0; i<header.length; i++) {
+
             if (header[i].equals(latitude)){
                 latPos = i;
                 fieldTypes.add(null);
