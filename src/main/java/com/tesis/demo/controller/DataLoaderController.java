@@ -29,14 +29,12 @@ public class DataLoaderController {
     @PostMapping("/upload-file")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
                                         @RequestParam("latitude") String latitude,
-                                        @RequestParam("longitude") String longitude,
-                                        @RequestParam("separator") String separator,
-                                        @RequestParam(value = "quote", required = false) String quote) {
+                                        @RequestParam("longitude") String longitude) {
         Map<String, Object> response = new HashMap<>();
 
         if(!file.isEmpty()){
             try {
-                dataLoaderService.uploadFile(file, latitude, longitude, separator, quote);
+                dataLoaderService.uploadFile(file, latitude, longitude);
                 response.put("mensaje", "Has subido correctamente el CSV: "+file.getOriginalFilename());
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
             } catch (Exception e) {
@@ -48,6 +46,36 @@ public class DataLoaderController {
         }
         response.put("mensaje", "El CSV esta vacio");
         response.put("error", "El CSV esta vacio");
+        return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping("/read-file")
+    public ResponseEntity<String[]> readFileAndGetHeader(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(dataLoaderService.readFileAndGetHeader(file));
+    }
+
+    @PostMapping("/upload-zones-file")
+    public ResponseEntity<?> uploadZoneFile(@RequestParam("file") MultipartFile file,
+                                        @RequestParam("latitude") String latitude,
+                                        @RequestParam("longitude") String longitude,
+                                        @RequestParam("name") String name,
+                                        @RequestParam("name") String description) {
+        Map<String, Object> response = new HashMap<>();
+
+        if(!file.isEmpty()){
+            try {
+                dataLoaderService.uploadZoneFile(file, latitude, longitude, name, description);
+                response.put("mensaje", "Se han creado correctamente las zonas: "+file.getOriginalFilename());
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+            } catch (Exception e) {
+                response.put("mensaje", "Error al cargar el archivo");
+                response.put("error", e.getMessage());
+                e.printStackTrace();
+                return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        response.put("mensaje", "El archivo esta vacio");
+        response.put("error", "El archivo esta vacio");
         return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

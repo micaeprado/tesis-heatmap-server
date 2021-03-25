@@ -5,6 +5,8 @@ import com.tesis.demo.model.Header;
 import com.tesis.demo.model.enumeration.ObjectType;
 import com.tesis.demo.repository.FileDataRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,6 +19,14 @@ public class FileDataService {
 
     private final FileDataRepository fileDataRepository;
 
+    public List<FileData> getAllFileData() {
+        return fileDataRepository.findAll();
+    }
+
+    public Page<FileData> getFilesPerPage(Pageable pageable) {
+        return fileDataRepository.findAll(pageable);
+    }
+
     public FileData save(FileData fileData) {
         return fileDataRepository.save(fileData);
     }
@@ -28,10 +38,6 @@ public class FileDataService {
                 .build();
 
         return save(fileData);
-    }
-
-    public List<FileData> getAllFileData() {
-        return fileDataRepository.findAll();
     }
 
     public ObjectType getFieldObjectType(String field, String fileName) {

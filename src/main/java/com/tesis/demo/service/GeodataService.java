@@ -60,7 +60,7 @@ public class GeodataService {
         List<Geodata> newGeodata = new ArrayList<>();
         for (Geodata data: geodata) {
             String fieldData = data.getFields().get(fieldFilter.getField());
-            ObjectType fieldObjectType = fileDataService.getFieldObjectType(fieldFilter.getField(), fieldFilter.getLayer().getFileName());
+            ObjectType fieldObjectType = fileDataService.getFieldObjectType(fieldFilter.getField(), fieldFilter.getMap().getFileName());
             if(FilterType.EQUAL.equals(fieldFilter.getFilterName())) {
                 List<String> values = new ArrayList<>(new HashSet<>(fieldFilter.getValuesToFilter())) ;
                 for (String value: values) {

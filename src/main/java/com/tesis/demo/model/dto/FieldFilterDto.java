@@ -19,6 +19,6 @@ public class FieldFilterDto {
 
     public List<String> valuesToFilter;
 
-    public LayerDto layer;
+    public MapDto map;
 
 }

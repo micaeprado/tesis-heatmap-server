@@ -2,16 +2,18 @@ package com.tesis.demo.controller;
 
 import com.tesis.demo.model.FileData;
 import com.tesis.demo.model.Filter;
-import com.tesis.demo.model.WeightedLoc;
-import com.tesis.demo.model.dto.LayerDto;
+import com.tesis.demo.model.dto.MapDto;
+import com.tesis.demo.model.dto.WeightedLoc;
 import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.FileDataService;
 import com.tesis.demo.service.FilterService;
 import com.tesis.demo.service.GeodataService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,22 +30,19 @@ import java.util.Set;
 public class AnalysisController {
 
     protected final AnalysisService analysisService;
-    protected final ModelMapper modelMapper;
     protected final GeodataService geodataService;
     protected final FileDataService fileDataService;
     protected final FilterService filterService;
-
-    /*@GetMapping("/{idFunction}")
-    public List<WeightedLoc> getElementsAnalyzed(@PathVariable Integer idFunction){
-        return null;
-        return analysisService.getElementsAnalyzed(idFunction);
-    }*/
 
     @GetMapping("/file-data")
     public List<FileData> getAllFileData() {
         return fileDataService.getAllFileData();
     }
 
+    @GetMapping("/file-data/page/{page}")
+    public Page<FileData> getFilesPerPage(@PathVariable Integer page) {
+        return fileDataService.getFilesPerPage(PageRequest.of(page, 5));
+    }
 
     @GetMapping("/filter")
     public List<String> getFilters(@RequestParam("file-name") String fileName,
@@ -56,13 +55,6 @@ public class AnalysisController {
         return filterService.getAllFilters();
     }
 
-  /*  @GetMapping("/elements")
-    public List<Geodata> getFilteredElements(@RequestParam("file-name") String fileName,
-                                             @RequestParam("field") String field,
-                                             @RequestParam("field-value") String fieldValue) {
-        return geodataService.getFilteredElements(fileName, field, fieldValue);
-    }*/
-
     @GetMapping("/functions")
     public Set<String> getFunctions() {
         return analysisService.getFunctions();
@@ -70,18 +62,8 @@ public class AnalysisController {
 
 
     @PostMapping("/map")
-    public List<WeightedLoc> getMapElements(@RequestBody LayerDto layer) {
-        return analysisService.getMapElements(layer);
+    public List<WeightedLoc> createMap(@RequestBody MapDto map) {
+        return analysisService.createMap(map);
     }
-
-   /* @GetMapping("/map")
-    public List<WeightedLoc> getMapElements(@RequestParam("file-name") String fileName,
-                                            @RequestParam("field-filter") String fieldFilter,
-                                            @RequestParam("field-value-filter") String fieldValueFilter,
-                                            @RequestParam("function") String function,
-                                            @RequestParam("field-value-function") String fieldValueFilterFunction,
-                                            @RequestParam("zone") Long zone) {
-        return analysisService.getMapElements(fileName, fieldFilter, fieldValueFilter, function, fieldValueFilterFunction, zone);
-    }*/
 
 }

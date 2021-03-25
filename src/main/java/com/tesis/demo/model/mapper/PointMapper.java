@@ -30,12 +30,6 @@ public class PointMapper {
                 .lat(pointDto.getLat());
     }
 
-    public static List<PointZone> toEntityList(List<PointZoneDto> pointDtos){
-        if (pointDtos == null){
-            return null;
-        }
-        return pointDtos.stream().map(PointMapper::toEntity).collect(Collectors.toList());
-    }
 
     public static List<PointZoneDto> toDTOList(List<PointZone> points){
         if (points == null){

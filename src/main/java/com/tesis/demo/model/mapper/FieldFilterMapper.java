@@ -19,7 +19,7 @@ public class FieldFilterMapper {
                 .field(fieldFilter.getField())
                 .filterName(fieldFilter.getFilterName())
                 .valuesToFilter(fieldFilter.getValuesToFilter())
-                .layer(LayerMapper.toDto(fieldFilter.getLayer()))
+                .map(MapMapper.toDto(fieldFilter.getMap()))
                 .build();
 
     }
@@ -33,13 +33,16 @@ public class FieldFilterMapper {
                 .id(fieldFilterDto.getId())
                 .field(fieldFilterDto.getField())
                 .filterName(fieldFilterDto.getFilterName())
-                .layer(LayerMapper.toEntity(fieldFilterDto.getLayer()))
+                .map(MapMapper.toEntity(fieldFilterDto.getMap()))
                 .build();
         fieldFilter.setValuesToFilter(fieldFilterDto.getValuesToFilter());
         return fieldFilter;
     }
 
     public static List<FieldFilterDto> fieldFiltersToFieldFilterDTOs(List<FieldFilter> fieldFilters){
+        if(fieldFilters == null || fieldFilters.isEmpty()) {
+            return null;
+        }
         return fieldFilters.stream()
                 .filter(Objects::nonNull)
                 .map(FieldFilterMapper::toDto)
@@ -47,6 +50,10 @@ public class FieldFilterMapper {
     }
 
     public static List<FieldFilter> fieldFiltersDTOsToFieldFilters(List<FieldFilterDto> fieldFilterDtos){
+        if(fieldFilterDtos == null || fieldFilterDtos.isEmpty()) {
+            return null;
+        }
+
         return fieldFilterDtos.stream()
                 .filter(Objects::nonNull)
                 .map(FieldFilterMapper::toEntity)

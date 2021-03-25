@@ -1,7 +1,7 @@
 package com.tesis.demo.service;
 
 import com.tesis.demo.model.FieldFilter;
-import com.tesis.demo.model.Layer;
+import com.tesis.demo.model.Map;
 import com.tesis.demo.model.dto.FieldFilterDto;
 import com.tesis.demo.model.mapper.FieldFilterMapper;
 import com.tesis.demo.repository.FieldFilterRepository;
@@ -17,16 +17,22 @@ public class FieldFilterService {
 
     private final FieldFilterRepository fieldFilterRepository;
 
-    public List<FieldFilterDto> saveAll(List<FieldFilter> fieldFilters, Layer layer) {
-        List<FieldFilterDto> fieldFilterDTOs = new ArrayList<>();
-        for (FieldFilter fieldFilter:fieldFilters) {
-            fieldFilter.setLayer(layer);
-            fieldFilterDTOs.add(FieldFilterMapper.toDto(fieldFilterRepository.save(fieldFilter)));
+    public List<FieldFilterDto> saveAll(List<FieldFilter> fieldFilters, Map map) {
+        if(fieldFilters == null) {
+            return null;
         }
+
+        List<FieldFilterDto> fieldFilterDTOs = new ArrayList<>();
+        fieldFilters.stream()
+                .peek(fieldFilter -> {
+                    fieldFilter.setMap(map);
+                    fieldFilterDTOs.add(save(fieldFilter));
+                });
+
         return fieldFilterDTOs;
     }
 
-    public FieldFilter save(FieldFilter fieldFilter) {
-        return fieldFilterRepository.save(fieldFilter);
+    public FieldFilterDto save(FieldFilter fieldFilter) {
+        return FieldFilterMapper.toDto(fieldFilterRepository.save(fieldFilter));
     }
 }

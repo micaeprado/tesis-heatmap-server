@@ -13,12 +13,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class PolygonService {
 
     protected final ZoneRepository zoneRepository;
@@ -49,9 +51,17 @@ public class PolygonService {
         return ZoneMapper.toDto(zone);
     }
 
-    public Zone createZone(ZoneDto zoneDto) {
-        Zone newZone = zoneRepository.save(ZoneMapper.toEntity(zoneDto));
-        createPoints(zoneDto.getPoints(), ZoneMapper.toDto(newZone));
+    public ZoneDto save(Zone zone) {
+        return ZoneMapper.toDto(zoneRepository.save(zone));
+    }
+
+    public PointZoneDto savePoint(PointZone pointZone) {
+        return PointMapper.toDto(pointZoneRepository.save(pointZone));
+    }
+
+    public ZoneDto createZone(ZoneDto zoneDto) {
+        ZoneDto newZone = save(ZoneMapper.toEntity(zoneDto));
+        createPoints(zoneDto.getPoints(), newZone);
         return newZone;
     }
 

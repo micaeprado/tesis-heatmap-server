@@ -37,7 +37,7 @@ public class FieldFilter {
 
     @ManyToOne
     @JsonIgnoreProperties(value = "fieldFilters", allowSetters = true)
-    public Layer layer;
+    public Map map;
 
     public List<String> getValuesToFilter() {
         return Arrays.asList(valuesToFilter.split(","));

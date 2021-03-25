@@ -1,6 +1,5 @@
 package com.tesis.demo.controller;
 
-import com.tesis.demo.model.Zone;
 import com.tesis.demo.model.dto.ZoneDto;
 import com.tesis.demo.service.PolygonService;
 import org.modelmapper.ModelMapper;
@@ -45,9 +44,9 @@ public class PolygonController {
     }
 
     @PostMapping
-    public ResponseEntity<Zone> createZone(@RequestBody ZoneDto zoneDto) {
+    public ResponseEntity<ZoneDto> createZone(@RequestBody ZoneDto zoneDto) {
         log.debug("REST request to save Zone : {}", zoneDto);
-        Zone newZone = polygonService.createZone(zoneDto);
+        ZoneDto newZone = polygonService.createZone(zoneDto);
         return ResponseEntity.ok(newZone);
     }
 
