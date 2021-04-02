@@ -2,10 +2,7 @@ package com.tesis.demo.service;
 
 import com.tesis.demo.model.Header;
 import com.tesis.demo.model.PointZone;
-import com.tesis.demo.model.Zone;
-import com.tesis.demo.model.dto.ZoneDto;
 import com.tesis.demo.model.enumeration.ObjectType;
-import com.tesis.demo.model.mapper.ZoneMapper;
 import com.tesis.demo.service.exceptions.FileEmptyException;
 import com.tesis.demo.service.exceptions.UploadFileException;
 import com.univocity.parsers.csv.CsvParser;
@@ -117,23 +114,29 @@ public class DataLoaderService {
         }
     }
 
-    public void uploadZoneFile(MultipartFile file, String latitude, String longitude, String name, String description) {
-        List<String[]> csv = readCSV(file);
-        String[] header = csv.get(0);
+    public List<PointZone> readFileAndGetPoints(MultipartFile file, String latitude, String longitude) {
+        if (!file.isEmpty()){
+            List<String[]> csv = readCSV(file);
+            return readZoneFile(csv, latitude, longitude);
+        }
+        throw new FileEmptyException("The file is empty");
+    }
 
-        ZoneDto zone = polygonService.save(new Zone().name(name).description(description));
+    public List<PointZone> readZoneFile(List<String[]> csv, String latitude, String longitude) {
+        String[] header = csv.get(0);
+        List<PointZone> pointZones = new ArrayList<>();
 
         for (int i=1; i<csv.size(); i++) {
+            PointZone pointZone = new PointZone();
             for (int j=0; j< header.length; j++) {
-                PointZone pointZone = new PointZone();
                 if (latitude.equals(header[j])) {
-                   pointZone.setLat(Double.parseDouble(csv.get(i)[j]));
-                }  else if (longitude.equals(header[j])) {
+                    pointZone.setLat(Double.parseDouble(csv.get(i)[j]));
+                } else if (longitude.equals(header[j])) {
                     pointZone.setLng(Double.parseDouble(csv.get(i)[j]));
                 }
-                pointZone.setZone(ZoneMapper.toEntity(zone));
-                polygonService.savePoint(pointZone);
+                pointZones.add(pointZone);
             }
         }
+        return pointZones;
     }
 }

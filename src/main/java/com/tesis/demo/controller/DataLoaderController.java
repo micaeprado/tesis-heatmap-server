@@ -1,5 +1,6 @@
 package com.tesis.demo.controller;
 
+import com.tesis.demo.model.PointZone;
 import com.tesis.demo.service.DataLoaderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -54,28 +56,10 @@ public class DataLoaderController {
         return ResponseEntity.ok(dataLoaderService.readFileAndGetHeader(file));
     }
 
-    @PostMapping("/upload-zones-file")
-    public ResponseEntity<?> uploadZoneFile(@RequestParam("file") MultipartFile file,
-                                        @RequestParam("latitude") String latitude,
-                                        @RequestParam("longitude") String longitude,
-                                        @RequestParam("name") String name,
-                                        @RequestParam("name") String description) {
-        Map<String, Object> response = new HashMap<>();
-
-        if(!file.isEmpty()){
-            try {
-                dataLoaderService.uploadZoneFile(file, latitude, longitude, name, description);
-                response.put("mensaje", "Se han creado correctamente las zonas: "+file.getOriginalFilename());
-                return new ResponseEntity<>(response, HttpStatus.CREATED);
-            } catch (Exception e) {
-                response.put("mensaje", "Error al cargar el archivo");
-                response.put("error", e.getMessage());
-                e.printStackTrace();
-                return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-        response.put("mensaje", "El archivo esta vacio");
-        response.put("error", "El archivo esta vacio");
-        return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    @PostMapping("/upload-zone-file")
+    public ResponseEntity<List<PointZone>> readZoneFile(@RequestParam("file") MultipartFile file,
+                                                        @RequestParam("latitude") String latitude,
+                                                        @RequestParam("longitude") String longitude) {
+        return ResponseEntity.ok(dataLoaderService.readFileAndGetPoints(file, latitude, longitude));
     }
 }
