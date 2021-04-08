@@ -30,32 +30,32 @@ public class Map {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    protected Long id;
 
     @Column(name = "name")
-    public String name;
+    protected String name;
 
     @Column(name = "file_name")
-    public String fileName;
+    protected String fileName;
 
     @Column(name = "function_name")
-    public String functionName;
+    protected String functionName;
 
     @Column(name = "field_to_calculate")
-    public String fieldToCalculate;
+    protected String fieldToCalculate;
 
     @Column(name = "creation_date")
     @CreationTimestamp
-    public LocalDateTime creationDate;
+    protected LocalDateTime creationDate;
 
     @OneToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "map", allowSetters = true)
-    public List<ZoneFilter> zoneFilters;
+    protected List<ZoneFilter> zoneFilters;
 
     @OneToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = "map", allowSetters = true)
-    public List<FieldFilter> fieldFilters;
+    protected List<FieldFilter> fieldFilters;
 
 }

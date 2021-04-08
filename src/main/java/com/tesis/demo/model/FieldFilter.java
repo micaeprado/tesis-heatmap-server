@@ -24,20 +24,20 @@ public class FieldFilter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    protected Long id;
 
     @Column(name = "filter_name")
-    public FilterType filterName;
+    protected FilterType filterName;
 
     @Column(name = "field")
-    public String field;
+    protected String field;
 
     @Column(name = "values_to_filter")
-    public String valuesToFilter;
+    protected String valuesToFilter;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "fieldFilters", allowSetters = true)
-    public Map map;
+    protected Map map;
 
     public List<String> getValuesToFilter() {
         return Arrays.asList(valuesToFilter.split(","));

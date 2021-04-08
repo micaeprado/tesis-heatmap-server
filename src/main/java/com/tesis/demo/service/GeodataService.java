@@ -52,7 +52,6 @@ public class GeodataService {
                 geodata = filterGeodata(fieldFilter, geodata);
             }
         }
-
         return geodata;
     }
 

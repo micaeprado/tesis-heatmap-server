@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
-    protected double lat;
-    protected double lng;
+public class WeightedLoc {
+    protected Point location;
+    protected double weight;
 
 }

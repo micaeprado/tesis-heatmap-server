@@ -18,13 +18,13 @@ import java.util.List;
 public class Filter {
 
     @Id
-    public String id;
+    protected String id;
 
     @Field("type")
     @Enumerated(EnumType.STRING)
-    public FilterType type;
+    protected FilterType type;
 
     @Field("object_types")
     @Enumerated(EnumType.STRING)
-    public List<ObjectType> objectTypes;
+    protected List<ObjectType> objectTypes;
 }

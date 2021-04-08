@@ -109,9 +109,11 @@ public class ComparePoints {
         }
 
         // Create a point for line segment from p to infinite
-        PointZoneDto extreme = new PointZoneDto()
+        PointZoneDto extreme = PointZoneDto
+                .builder()
                 .lat(INF)
-                .lng(p.getLng());
+                .lng(p.getLng())
+                .build();
 
         // Count intersections of the above line
         // with sides of polygon

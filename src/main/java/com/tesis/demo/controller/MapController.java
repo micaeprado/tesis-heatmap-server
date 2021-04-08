@@ -1,6 +1,5 @@
 package com.tesis.demo.controller;
 
-import com.tesis.demo.model.dto.WeightedLoc;
 import com.tesis.demo.model.dto.MapDto;
 import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.MapService;
@@ -10,8 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,11 +31,6 @@ public class MapController {
     @GetMapping("/page/{page}")
     public Page<MapDto> getMaps(@PathVariable Integer page){
         return mapService.getMapsPerPage(PageRequest.of(page, 5));
-    }
-
-    @PostMapping()
-    public List<WeightedLoc> createMap(@RequestBody MapDto map) {
-        return analysisService.createMap(map);
     }
 
 }

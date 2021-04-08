@@ -1,4 +1,4 @@
-package com.tesis.demo.model;
+package com.tesis.demo.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Point {
-    protected double lat;
-    protected double lng;
+public class WeightedLocDto {
+    protected PointDto location;
+    protected double weight;
 
 }

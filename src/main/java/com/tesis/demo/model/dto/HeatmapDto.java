@@ -1,5 +1,6 @@
-package com.tesis.demo.model;
+package com.tesis.demo.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,22 +11,29 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Document(collection = "file_data")
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Builder
-public class FileData {
+@Document(collection = "heatmap")
+public class HeatmapDto {
 
     @Id
     protected String id;
 
-    @Field("file_name")
-    protected String fileName;
+    @Field("name")
+    protected String name;
 
     @Field("creation_date")
     @CreationTimestamp
     protected LocalDateTime creationDate;
 
-    @Field("header")
-    protected List<Header> header;
+    @Field("zones_id")
+    protected List<String> zonesId;
+
+    @Field("weighted_locs")
+    protected List<WeightedLocDto> weightedLocs;
+
+    @Field("geodata")
+    protected List<GeodataDto> geodata;
 
 }

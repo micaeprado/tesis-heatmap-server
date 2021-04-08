@@ -14,23 +14,27 @@ public class ZoneMapper {
         if (zone == null) {
             return null;
         }
-        return new ZoneDto()
+        return ZoneDto
+                .builder()
                 .id(zone.getId())
                 .name(zone.getName())
                 .description(zone.getDescription())
                 .creationDate(zone.getCreationDate())
-                .points(PointMapper.toDTOList(zone.getPoints()));
+                .points(PointZoneMapper.toDTOList(zone.getPoints()))
+                .build();
     }
 
     public static Zone toEntity(ZoneDto zone) {
         if (zone == null) {
             return null;
         }
-        return new Zone()
+        return Zone
+                .builder()
                 .id(zone.getId())
                 .name(zone.getName())
                 .description(zone.getDescription())
-                .creationDate(zone.getCreationDate());
+                .creationDate(zone.getCreationDate())
+                .build();
     }
 
     public static List<Zone> toEntityList(List<ZoneDto> zoneDtos){

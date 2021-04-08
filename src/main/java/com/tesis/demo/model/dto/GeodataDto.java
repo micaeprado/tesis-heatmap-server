@@ -1,4 +1,4 @@
-package com.tesis.demo.model;
+package com.tesis.demo.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.Map;
 @Document(collection = "geo_data")
 @Data
 @Builder
-public class Geodata {
+public class GeodataDto {
 
     @Id
     protected String id;

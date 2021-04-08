@@ -3,7 +3,7 @@ package com.tesis.demo.controller;
 import com.tesis.demo.model.FileData;
 import com.tesis.demo.model.Filter;
 import com.tesis.demo.model.dto.MapDto;
-import com.tesis.demo.model.dto.WeightedLoc;
+import com.tesis.demo.model.dto.WeightedLocDto;
 import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.FileDataService;
 import com.tesis.demo.service.FilterService;
@@ -62,7 +62,7 @@ public class AnalysisController {
 
 
     @PostMapping("/map")
-    public List<WeightedLoc> createMap(@RequestBody MapDto map) {
+    public List<WeightedLocDto> createMap(@RequestBody MapDto map) {
         return analysisService.createMap(map);
     }
 

@@ -5,7 +5,7 @@ import com.tesis.demo.model.Zone;
 import com.tesis.demo.model.dto.PointZoneDto;
 import com.tesis.demo.model.dto.ZoneDto;
 import com.tesis.demo.model.dto.toDelete.PointDto;
-import com.tesis.demo.model.mapper.PointMapper;
+import com.tesis.demo.model.mapper.PointZoneMapper;
 import com.tesis.demo.model.mapper.ZoneMapper;
 import com.tesis.demo.repository.PointZoneRepository;
 import com.tesis.demo.repository.ZoneRepository;
@@ -43,7 +43,7 @@ public class PolygonService {
     }
 
     public List<PointZoneDto> getPointsDtoByZone(ZoneDto zone) {
-        return PointMapper.toDTOList(pointZoneRepository.getAllByZone(ZoneMapper.toEntity(zone)));
+        return PointZoneMapper.toDTOList(pointZoneRepository.getAllByZone(ZoneMapper.toEntity(zone)));
     }
 
     public ZoneDto getZoneById(Long id) {
@@ -56,7 +56,7 @@ public class PolygonService {
     }
 
     public PointZoneDto savePoint(PointZone pointZone) {
-        return PointMapper.toDto(pointZoneRepository.save(pointZone));
+        return PointZoneMapper.toDto(pointZoneRepository.save(pointZone));
     }
 
     public ZoneDto createZone(ZoneDto zoneDto) {
@@ -68,7 +68,7 @@ public class PolygonService {
     private List<PointZone> createPoints(List<PointZoneDto> points, ZoneDto zone) {
         List<PointZone> pointZones = new ArrayList<>();
         for (PointZoneDto pointDto: points) {
-            PointZone pointZone = PointMapper.toEntity(pointDto);
+            PointZone pointZone = PointZoneMapper.toEntity(pointDto);
             pointZone.setZone(ZoneMapper.toEntity(zone));
             PointZone newPoint = pointZoneRepository.save(pointZone);
             pointZones.add(newPoint);

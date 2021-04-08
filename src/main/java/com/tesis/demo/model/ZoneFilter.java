@@ -21,17 +21,17 @@ public class ZoneFilter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    protected Long id;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "zoneFilters", allowSetters = true)
-    public Zone zone;
+    protected Zone zone;
 
     @Column(name = "filter_inside")
-    public Boolean filterInside;
+    protected Boolean filterInside;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "zoneFilters", allowSetters = true)
-    public Map map;
+    protected Map map;
 
 }

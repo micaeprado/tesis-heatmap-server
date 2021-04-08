@@ -10,9 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Header {
 
     @Field("header")
-    public String header;
+    protected String header;
 
     @Field("object_type")
-    public ObjectType objectType;
+    protected ObjectType objectType;
 
 }
