@@ -1,5 +1,6 @@
 package com.tesis.demo.controller;
 
+import com.tesis.demo.model.dto.GeodataDto;
 import com.tesis.demo.model.dto.HeatmapDto;
 import com.tesis.demo.model.dto.MapDto;
 import com.tesis.demo.model.dto.WeightedLocDto;
@@ -48,6 +49,11 @@ public class HeatmapController {
     @PostMapping("/zones")
     public List<ZoneDto> getHeatmapZones(@RequestBody List<String> zones) {
         return zoneService.getZones(zones);
+    }
+
+    @GetMapping("/download/{id}")
+    public List<GeodataDto> downloadHeatmapDataCSV(@PathVariable String id) {
+        return heatmapService.downloadHeatmapDataCSV(id);
     }
 
 }

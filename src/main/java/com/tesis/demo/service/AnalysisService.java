@@ -20,6 +20,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +65,13 @@ public class AnalysisService {
             weightedLocs.add(WeightedLoc.builder().location(point).weight(weight).build());
         });
 
-        Heatmap heatmap = Heatmap.builder().name(name).geodata(newGeodata).weightedLocs(weightedLocs).zonesId(zonesId).build();
+        Heatmap heatmap = Heatmap.builder()
+                .name(name)
+                .geodata(newGeodata)
+                .weightedLocs(weightedLocs)
+                .zonesId(zonesId)
+                .creationDate(LocalDateTime.now())
+                .build();
         return HeatmapMapper.toDto(heatmapService.save(heatmap));
     }
 

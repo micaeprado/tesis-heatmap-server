@@ -1,7 +1,9 @@
 package com.tesis.demo.service;
 
 import com.tesis.demo.model.Heatmap;
+import com.tesis.demo.model.dto.GeodataDto;
 import com.tesis.demo.model.dto.HeatmapDto;
+import com.tesis.demo.model.mapper.GeodataMapper;
 import com.tesis.demo.model.mapper.HeatmapMapper;
 import com.tesis.demo.repository.HeatmapRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 
 @Service
@@ -30,5 +33,10 @@ public class HeatmapService {
     public HeatmapDto getHeatmap(String id) {
         Heatmap heatmap = heatmapRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         return HeatmapMapper.toDto(heatmap);
+    }
+
+    public List<GeodataDto> downloadHeatmapDataCSV(String id) {
+        Heatmap heatmap = heatmapRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return GeodataMapper.toDTOList(heatmap.getGeodata());
     }
 }
