@@ -57,58 +57,63 @@ public class GeodataService {
 
     private List<Geodata> filterGeodata(FieldFilterDto fieldFilter, List<Geodata> geodata) {
         List<Geodata> newGeodata = new ArrayList<>();
+        if (fieldFilter == null) {
+            return geodata;
+        }
         for (Geodata data: geodata) {
             String fieldData = data.getFields().get(fieldFilter.getField());
-            ObjectType fieldObjectType = fileDataService.getFieldObjectType(fieldFilter.getField(), fieldFilter.getMap().getFileName());
-            if(FilterType.EQUAL.equals(fieldFilter.getFilterName())) {
-                List<String> values = new ArrayList<>(new HashSet<>(fieldFilter.getValuesToFilter())) ;
-                for (String value: values) {
-                    if (fieldData.equals(value)) {
-                        newGeodata.add(data);
+            if(fieldData != null) {
+                ObjectType fieldObjectType = fileDataService.getFieldObjectType(fieldFilter.getField(), fieldFilter.getMap().getFileName());
+                if (FilterType.EQUAL.equals(fieldFilter.getFilterName())) {
+                    List<String> values = new ArrayList<>(new HashSet<>(fieldFilter.getValuesToFilter()));
+                    for (String value : values) {
+                        if (fieldData.equals(value)) {
+                            newGeodata.add(data);
+                        }
                     }
-                }
-            } else if(FilterType.DIFFERENT.equals(fieldFilter.getFilterName())) {
-                List<String> values = new ArrayList<>(new HashSet<>(fieldFilter.getValuesToFilter())) ;
-                for (String value: values) {
-                    if (!fieldData.equals(value)) {
-                        newGeodata.add(data);
+                } else if (FilterType.DIFFERENT.equals(fieldFilter.getFilterName())) {
+                    List<String> values = new ArrayList<>(new HashSet<>(fieldFilter.getValuesToFilter()));
+                    for (String value : values) {
+                        if (!fieldData.equals(value)) {
+                            newGeodata.add(data);
+                        }
                     }
-                }
-            } else if(FilterType.GREATER.equals(fieldFilter.getFilterName())) {
-                String stringValue = fieldFilter.getValuesToFilter().get(0) ;
-                if(ObjectType.NUMBER.equals(fieldObjectType)) {
-                    BigDecimal numberValue = new BigDecimal(stringValue);
-                    BigDecimal numberFieldData = new BigDecimal(fieldData);
-                    if(numberFieldData.compareTo(numberValue) < 0) {
-                        newGeodata.add(data);
+                } else if (FilterType.GREATER.equals(fieldFilter.getFilterName())) {
+                    String stringValue = fieldFilter.getValuesToFilter().get(0);
+                    if (ObjectType.NUMBER.equals(fieldObjectType)) {
+                        BigDecimal numberValue = new BigDecimal(stringValue);
+                        BigDecimal numberFieldData = new BigDecimal(fieldData);
+                        if (numberFieldData.compareTo(numberValue) < 0) {
+                            newGeodata.add(data);
+                        }
                     }
-                }
-            } else if(FilterType.GREATER_EQUAL.equals(fieldFilter.getFilterName())) {
-                String stringValue = fieldFilter.getValuesToFilter().get(0) ;
-                if(ObjectType.NUMBER.equals(fieldObjectType)) {
-                    BigDecimal numberValue = new BigDecimal(stringValue);
-                    BigDecimal numberFieldData = new BigDecimal(fieldData);
-                    if(numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) < 0) {
-                        newGeodata.add(data);
+                } else if (FilterType.GREATER_EQUAL.equals(fieldFilter.getFilterName())) {
+                    String stringValue = fieldFilter.getValuesToFilter().get(0);
+                    if (ObjectType.NUMBER.equals(fieldObjectType)) {
+                        BigDecimal numberValue = new BigDecimal(stringValue);
+                        BigDecimal numberFieldData = new BigDecimal(fieldData);
+                        if (numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) < 0) {
+                            newGeodata.add(data);
+                        }
                     }
-                }
 
-            } else if (FilterType.LESS.equals(fieldFilter.getFilterName())) {
-                String stringValue = fieldFilter.getValuesToFilter().get(0) ;
-                if(ObjectType.NUMBER.equals(fieldObjectType)) {
-                    BigDecimal numberValue = new BigDecimal(stringValue);
-                    BigDecimal numberFieldData = new BigDecimal(fieldData);
-                    if(numberFieldData.compareTo(numberValue) > 0) {
-                        newGeodata.add(data);
+                } else if (FilterType.LESS.equals(fieldFilter.getFilterName())) {
+                    String stringValue = fieldFilter.getValuesToFilter().get(0);
+                    if (ObjectType.NUMBER.equals(fieldObjectType)) {
+                        BigDecimal numberValue = new BigDecimal(stringValue);
+                        BigDecimal numberFieldData = new BigDecimal(fieldData);
+                        if (numberFieldData.compareTo(numberValue) > 0) {
+                            newGeodata.add(data);
+                        }
                     }
-                }
-            } else {
-                String stringValue = fieldFilter.getValuesToFilter().get(0) ;
-                if(ObjectType.NUMBER.equals(fieldObjectType)) {
-                    BigDecimal numberValue = new BigDecimal(stringValue);
-                    BigDecimal numberFieldData = new BigDecimal(fieldData);
-                    if(numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) > 0) {
-                        newGeodata.add(data);
+                } else {
+                    String stringValue = fieldFilter.getValuesToFilter().get(0);
+                    if (ObjectType.NUMBER.equals(fieldObjectType)) {
+                        BigDecimal numberValue = new BigDecimal(stringValue);
+                        BigDecimal numberFieldData = new BigDecimal(fieldData);
+                        if (numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) > 0) {
+                            newGeodata.add(data);
+                        }
                     }
                 }
             }

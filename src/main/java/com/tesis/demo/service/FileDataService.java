@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ public class FileDataService {
         FileData fileData = FileData.builder()
                 .fileName(originalFilename)
                 .header(header)
+                .creationDate(LocalDateTime.now())
                 .build();
 
         return save(fileData);

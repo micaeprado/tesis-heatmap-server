@@ -23,8 +23,7 @@ public class ZoneFilterService {
         }
 
         List<ZoneFilterDto> zoneFilterDtos = new ArrayList<>();
-        zoneFilters.stream()
-                .peek(zoneFilter -> {
+        zoneFilters.forEach(zoneFilter -> {
                     zoneFilter.setMap(map);
                     zoneFilterDtos.add(save(zoneFilter));
                 });

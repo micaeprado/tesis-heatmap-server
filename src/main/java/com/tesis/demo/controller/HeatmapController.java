@@ -1,6 +1,5 @@
 package com.tesis.demo.controller;
 
-import com.tesis.demo.model.dto.GeodataDto;
 import com.tesis.demo.model.dto.HeatmapDto;
 import com.tesis.demo.model.dto.MapDto;
 import com.tesis.demo.model.dto.WeightedLocDto;
@@ -9,8 +8,10 @@ import com.tesis.demo.service.AnalysisService;
 import com.tesis.demo.service.HeatmapService;
 import com.tesis.demo.service.ZoneService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -52,7 +54,7 @@ public class HeatmapController {
     }
 
     @GetMapping("/download/{id}")
-    public List<GeodataDto> downloadHeatmapDataCSV(@PathVariable String id) {
+    public ResponseEntity<Resource> downloadHeatmapDataCSV(@PathVariable String id) throws IOException {
         return heatmapService.downloadHeatmapDataCSV(id);
     }
 

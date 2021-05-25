@@ -23,11 +23,10 @@ public class FieldFilterService {
         }
 
         List<FieldFilterDto> fieldFilterDTOs = new ArrayList<>();
-        fieldFilters.stream()
-                .peek(fieldFilter -> {
-                    fieldFilter.setMap(map);
-                    fieldFilterDTOs.add(save(fieldFilter));
-                });
+        fieldFilters.forEach(fieldFilter -> {
+            fieldFilter.setMap(map);
+            fieldFilterDTOs.add(save(fieldFilter));
+        });
 
         return fieldFilterDTOs;
     }
