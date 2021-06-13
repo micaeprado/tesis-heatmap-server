@@ -83,7 +83,7 @@ public class GeodataService {
                     if (ObjectType.NUMBER.equals(fieldObjectType)) {
                         BigDecimal numberValue = new BigDecimal(stringValue);
                         BigDecimal numberFieldData = new BigDecimal(fieldData);
-                        if (numberFieldData.compareTo(numberValue) < 0) {
+                        if (numberFieldData.compareTo(numberValue) > 0) {
                             newGeodata.add(data);
                         }
                     }
@@ -92,7 +92,7 @@ public class GeodataService {
                     if (ObjectType.NUMBER.equals(fieldObjectType)) {
                         BigDecimal numberValue = new BigDecimal(stringValue);
                         BigDecimal numberFieldData = new BigDecimal(fieldData);
-                        if (numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) < 0) {
+                        if (numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) > 0) {
                             newGeodata.add(data);
                         }
                     }
@@ -102,7 +102,7 @@ public class GeodataService {
                     if (ObjectType.NUMBER.equals(fieldObjectType)) {
                         BigDecimal numberValue = new BigDecimal(stringValue);
                         BigDecimal numberFieldData = new BigDecimal(fieldData);
-                        if (numberFieldData.compareTo(numberValue) > 0) {
+                        if (numberFieldData.compareTo(numberValue) < 0) {
                             newGeodata.add(data);
                         }
                     }
@@ -111,7 +111,7 @@ public class GeodataService {
                     if (ObjectType.NUMBER.equals(fieldObjectType)) {
                         BigDecimal numberValue = new BigDecimal(stringValue);
                         BigDecimal numberFieldData = new BigDecimal(fieldData);
-                        if (numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) > 0) {
+                        if (numberFieldData.compareTo(numberValue) == 0 || numberFieldData.compareTo(numberValue) < 0) {
                             newGeodata.add(data);
                         }
                     }

@@ -88,15 +88,17 @@ public class AnalysisService {
     }
 
     private double getResult(String idFunction, List<Geodata> geodata, String field) {
-            if(FunctionType.FUNCTION_STANDARD_DEVIATION.getName().equals(idFunction)) {
-                return getStandardDeviation(geodata, field);
-            }
-            else if(FunctionType.FUNCTION_ARITHMETIC_AVERAGE.getName().equals(idFunction)) {
-                return getArithmeticAverage(geodata, field);
-            }
+        if (FunctionType.FUNCTION_STANDARD_DEVIATION.getName().equals(idFunction)) {
+            return getStandardDeviation(geodata, field);
+        } else if (FunctionType.FUNCTION_ARITHMETIC_AVERAGE.getName().equals(idFunction)) {
+            return getArithmeticAverage(geodata, field);
+        } else if (FunctionType.FUNCTION_MINIMUM.getName().equals(idFunction)) {
+            return getMinimum(geodata, field);
+        } else if (FunctionType.FUNCTION_MAXIMUM.getName().equals(idFunction)){
+            return getMaximum(geodata, field);
+        }
         return 0;
     }
-
 
     private double getStandardDeviation(List<Geodata> geodata, String field) {
         return getDescriptiveStatistics(geodata, field).getStandardDeviation();
@@ -106,9 +108,16 @@ public class AnalysisService {
         return getDescriptiveStatistics(geodata, field).getMean();
     }
 
+    private double getMinimum(List<Geodata> geodata, String field) {
+        return getDescriptiveStatistics(geodata, field).getMin();
+    }
+
+    private double getMaximum(List<Geodata> geodata, String field) {
+        return getDescriptiveStatistics(geodata, field).getMax();
+    }
+
     private DescriptiveStatistics getDescriptiveStatistics(List<Geodata> geodata, String field) {
         DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
-
         for (Geodata element : geodata) {
             descriptiveStatistics.addValue(Double.parseDouble(element.getFields().get(field)));
         }
@@ -120,6 +129,8 @@ public class AnalysisService {
         Set<String> functions = new HashSet<>();
         functions.add(FunctionType.FUNCTION_STANDARD_DEVIATION.getName());
         functions.add(FunctionType.FUNCTION_ARITHMETIC_AVERAGE.getName());
+        functions.add(FunctionType.FUNCTION_MINIMUM.getName());
+        functions.add(FunctionType.FUNCTION_MAXIMUM.getName());
         return functions;
     }
 

@@ -63,14 +63,15 @@ public class DataLoaderService {
                     fieldTypes.get(j).setObjectType(getFieldType(fieldTypes.get(j).getObjectType(), csv.get(i)[j]));
                 }
             }
-            geodataService.saveGeodata(file.getOriginalFilename(), Double.parseDouble(csv.get(i)[latPos]),
-                    Double.parseDouble(csv.get(i)[lngPos]), fields);
+            if (csv.get(i)[latPos] != null && csv.get(i)[lngPos] != null) {
+                geodataService.saveGeodata(file.getOriginalFilename(), Double.parseDouble(csv.get(i)[latPos]),
+                        Double.parseDouble(csv.get(i)[lngPos]), fields);
+            }
         }
         fileDataService.saveFileData(file.getOriginalFilename(), fieldTypes.stream().filter(Objects::nonNull).collect(Collectors.toList()));
     }
 
     private ObjectType getFieldType(ObjectType currentFieldType, String fieldValue) {
-
         if (ObjectType.STRING.equals(currentFieldType) ||
                 (currentFieldType != null && !getFieldType(fieldValue).equals(currentFieldType))) {
             return ObjectType.STRING;
@@ -86,9 +87,6 @@ public class DataLoaderService {
                     || GenericValidator.isFloat(s)
                     || GenericValidator.isFloat(s)) {
                 return ObjectType.NUMBER;
-            } else if (GenericValidator.isDate(s, "yyyy-MM-dd", true)
-                    || GenericValidator.isDate(s, "dd-MM-yyyy", true)) {
-                return ObjectType.DATE;
             }
         }
         return ObjectType.STRING;
