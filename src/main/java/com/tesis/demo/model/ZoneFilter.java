@@ -30,6 +30,9 @@ public class ZoneFilter {
     @Column(name = "filter_inside")
     protected Boolean filterInside;
 
+    @Column(name = "filter_or")
+    protected Boolean filterOr;
+
     @ManyToOne
     @JsonIgnoreProperties(value = "zoneFilters", allowSetters = true)
     protected Map map;
