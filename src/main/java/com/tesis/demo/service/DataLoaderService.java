@@ -37,15 +37,15 @@ public class DataLoaderService {
         List<String> headers = new ArrayList<>();
         List<Header> fieldTypes = new ArrayList<>();
 
-        for (int i=0; i<header.length; i++) {
+        for (int i=0; i<header.length; i++) { //recorre los headers
             if (header[i].equals(latitude)){
-                latPos = i;
+                latPos = i; // guarda posicion de latitud
                 fieldTypes.add(null);
             } else if (header[i].equals(longitude)){
-                lngPos = i;
+                lngPos = i; // guarda posicion de longitud
                 fieldTypes.add(null);
             } else {
-                headers.add(header[i]);
+                headers.add(header[i]);  // guarda headers
                 fieldTypes.add(Header.builder()
                                 .header(header[i])
                                 .objectType(null)
@@ -53,17 +53,19 @@ public class DataLoaderService {
             }
         }
 
-        for (int i=1; i<csv.size(); i++) {
+        for (int i=1; i<csv.size(); i++) { // recorre csv sin contar los headers
             Map<String, String> fields = new HashMap<>();
             for (int j=0; j< header.length; j++) {
                 if (j != latPos && j != lngPos) {
-                    if (csv.get(i)[j] != null && !csv.get(i)[j].isEmpty()) {
+                    if (csv.get(i)[j] != null && !csv.get(i)[j].isEmpty()) { // si tiene valor lo guarda, sino null
                         fields.put(header[j], csv.get(i)[j]);
+                    } else {
+                        fields.put(header[j], null);
                     }
                     fieldTypes.get(j).setObjectType(getFieldType(fieldTypes.get(j).getObjectType(), csv.get(i)[j]));
                 }
             }
-            if (csv.get(i)[latPos] != null && csv.get(i)[lngPos] != null) {
+            if (csv.get(i)[latPos] != null && csv.get(i)[lngPos] != null) { // se asegura que tenga coordenadas
                 geodataService.saveGeodata(file.getOriginalFilename(), Double.parseDouble(csv.get(i)[latPos]),
                         Double.parseDouble(csv.get(i)[lngPos]), fields);
             }
