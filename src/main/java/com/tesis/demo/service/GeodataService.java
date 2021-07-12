@@ -2,6 +2,8 @@ package com.tesis.demo.service;
 
 import com.tesis.demo.model.Geodata;
 import com.tesis.demo.model.dto.FieldFilterDto;
+import com.tesis.demo.model.dto.PointZoneDto;
+import com.tesis.demo.model.dto.ZoneFilterDto;
 import com.tesis.demo.model.enumeration.FilterType;
 import com.tesis.demo.model.enumeration.ObjectType;
 import com.tesis.demo.repository.GeodataDAO;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class GeodataService {
         return save(geodata);
     }
 
-    public List<Geodata> getGeodataByFileName(String fileName) {
+    public Set<Geodata> getGeodataByFileName(String fileName) {
         return geodataRepository.findByFileName(fileName);
     }
 
@@ -45,18 +48,26 @@ public class GeodataService {
         return geodataDAO.findDistinctByFileNameAndField(name, header);
     }
 
-    public List<Geodata> getFilteredElements(String fileName, List<FieldFilterDto> fieldFilters) {
-        List<Geodata> geodata = geodataRepository.findByFileName(fileName);
+    public List<Geodata> getFilteredElements(String fileName, List<FieldFilterDto> fieldFilters, List<ZoneFilterDto> zoneFilters) {
+        Set<Geodata> geodata = geodataRepository.findByFileName(fileName);
+
+        Set<Geodata> newGeodata = geodata;
+        if (zoneFilters != null) {
+            for (ZoneFilterDto zoneFilter : zoneFilters) {
+                newGeodata = getGeodataFilteredByZone(zoneFilter, newGeodata);
+            } // aca implemento lo del + y -
+        }
+
         if(fieldFilters != null)  {
             for (FieldFilterDto fieldFilter : fieldFilters) {
-                geodata = filterGeodata(fieldFilter, geodata);
+                newGeodata = filterGeodata(fieldFilter, geodata);
             }
         }
-        return geodata;
+        return new ArrayList<>(newGeodata);
     }
 
-    private List<Geodata> filterGeodata(FieldFilterDto fieldFilter, List<Geodata> geodata) {
-        List<Geodata> newGeodata = new ArrayList<>();
+    private Set<Geodata> filterGeodata(FieldFilterDto fieldFilter, Set<Geodata> geodata) {
+        Set<Geodata> newGeodata = new HashSet<>();
         if (fieldFilter == null) {
             return geodata;
         }
@@ -121,7 +132,17 @@ public class GeodataService {
         return newGeodata;
     }
 
-
+    private Set<Geodata> getGeodataFilteredByZone(ZoneFilterDto zoneFilter, Set<Geodata> newGeodata) {
+        Set<Geodata> result = new HashSet<>();
+        for (Geodata element:newGeodata) {
+            PointZoneDto point = PointZoneDto.builder().lat(element.getLat()).lng(element.getLng()).build();
+            if ((zoneFilter.getFilterInside() && ComparePoints.isInside(zoneFilter.getZone().getPoints(), point))
+                    || (!zoneFilter.getFilterInside() && !ComparePoints.isInside(zoneFilter.getZone().getPoints(), point))) {
+                result.add(element);
+            }
+        }
+        return result;
+    }
 
 
 }

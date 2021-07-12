@@ -4,7 +4,6 @@ import com.tesis.demo.model.PointZone;
 import com.tesis.demo.model.Zone;
 import com.tesis.demo.model.dto.PointZoneDto;
 import com.tesis.demo.model.dto.ZoneDto;
-import com.tesis.demo.model.dto.toDelete.PointDto;
 import com.tesis.demo.model.mapper.PointZoneMapper;
 import com.tesis.demo.model.mapper.ZoneMapper;
 import com.tesis.demo.repository.PointZoneRepository;
@@ -76,16 +75,4 @@ public class PolygonService {
         return pointZones;
     }
 
-    public boolean isPointInsideZone(PointDto point, ZoneDto zone) {
-        List<PointZoneDto> points = getPointsDtoByZone(zone);
-        int i, j;
-        for (i = 0, j = points.size() - 1; i < points.size(); j = i++){
-            if (((points.get(i).getLng() > point.getLng()) != (points.get(j).getLng() > point.getLng()))
-                    && (point.getLat() < (points.get(j).getLat() - points.get(i).getLat()) *
-                    (point.getLng() - points.get(i).getLng()) / (points.get(j).getLng() - points.get(i).getLng()) + points.get(i).getLat())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

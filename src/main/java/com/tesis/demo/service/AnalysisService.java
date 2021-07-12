@@ -9,7 +9,6 @@ import com.tesis.demo.model.WeightedLoc;
 import com.tesis.demo.model.dto.FieldFilterDto;
 import com.tesis.demo.model.dto.HeatmapDto;
 import com.tesis.demo.model.dto.MapDto;
-import com.tesis.demo.model.dto.PointZoneDto;
 import com.tesis.demo.model.dto.WeightedLocDto;
 import com.tesis.demo.model.dto.ZoneFilterDto;
 import com.tesis.demo.model.mapper.FieldFilterMapper;
@@ -42,7 +41,7 @@ public class AnalysisService {
         Map savedMap = mapService.save(map);
         List<FieldFilterDto> savedFieldFilter = fieldFilterService.saveAll(FieldFilterMapper.fieldFiltersDTOsToFieldFilters(map.getFieldFilters()), savedMap);
         List<ZoneFilterDto> savedZoneFilter = zoneFilterService.saveAll(ZoneFilterMapper.zoneFiltersDTOsToList(map.getZoneFilters()), savedMap);
-        List<Geodata> filteredElements = geodataService.getFilteredElements(map.getFileName(), savedFieldFilter);
+        List<Geodata> filteredElements = geodataService.getFilteredElements(map.getFileName(), savedFieldFilter, savedZoneFilter);
         HeatmapDto heatmap = createHeatmap(map.getName(), filteredElements, map.getFunctionName(), map.getFieldToCalculate(), map.getZoneFilters());
         return heatmap.getWeightedLocs();
     }
@@ -50,16 +49,7 @@ public class AnalysisService {
     private HeatmapDto createHeatmap(String name, List<Geodata> geodata, String function, String fieldValueFilterFunction, List<ZoneFilterDto> zoneFilters) {
         double result = getResult(function, geodata, fieldValueFilterFunction);
         List<WeightedLoc> weightedLocs = new ArrayList<>();
-        List<Geodata> newGeodata = geodata;
-        List<String> zonesId = new ArrayList<>();
-        if (zoneFilters != null) {
-            for (ZoneFilterDto zoneFilter : zoneFilters) {
-                zonesId.add(zoneFilter.getZone().getId().toString());
-                newGeodata = getGeodataFilteredByZone(zoneFilter, newGeodata);
-            }
-        }
-
-        newGeodata.forEach(element -> {
+        geodata.forEach(element -> {
             Point point = Point.builder().lat(element.getLat()).lng(element.getLng()).build();
             double weight = Double.parseDouble(element.getFields().get(fieldValueFilterFunction)) / result;
             weightedLocs.add(WeightedLoc.builder().location(point).weight(weight).build());
@@ -67,24 +57,11 @@ public class AnalysisService {
 
         Heatmap heatmap = Heatmap.builder()
                 .name(name)
-                .geodata(newGeodata)
+                .geodata(geodata)
                 .weightedLocs(weightedLocs)
-                .zonesId(zonesId)
                 .creationDate(LocalDateTime.now())
                 .build();
         return HeatmapMapper.toDto(heatmapService.save(heatmap));
-    }
-
-    private List<Geodata> getGeodataFilteredByZone(ZoneFilterDto zoneFilter, List<Geodata> newGeodata) {
-        List<Geodata> result = new ArrayList<>();
-        for (Geodata element:newGeodata) {
-            PointZoneDto point = PointZoneDto.builder().lat(element.getLat()).lng(element.getLng()).build();
-            if ((zoneFilter.getFilterInside() && ComparePoints.isInside(zoneFilter.getZone().getPoints(), point))
-                    || (!zoneFilter.getFilterInside() && !ComparePoints.isInside(zoneFilter.getZone().getPoints(), point))) {
-                result.add(element);
-            }
-        }
-        return result;
     }
 
     private double getResult(String idFunction, List<Geodata> geodata, String field) {
