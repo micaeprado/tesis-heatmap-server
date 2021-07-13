@@ -18,8 +18,8 @@ public class ZoneFilterService {
     private final ZoneFilterRepository zoneFilterRepository;
 
     public List<ZoneFilterDto> saveAll(List<ZoneFilter> zoneFilters, Map map) {
-        if(zoneFilters == null) {
-            return null;
+        if (zoneFilters == null) {
+            return new ArrayList<>();
         }
 
         List<ZoneFilterDto> zoneFilterDtos = new ArrayList<>();

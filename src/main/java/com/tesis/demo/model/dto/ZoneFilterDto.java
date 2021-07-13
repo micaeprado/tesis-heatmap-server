@@ -12,7 +12,7 @@ public class ZoneFilterDto {
     
     private ZoneDto zone;
 
-    private Boolean filterInside;
+    private Boolean filterAdd;
 
     private MapDto map;
 }

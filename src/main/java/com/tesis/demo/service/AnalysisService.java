@@ -10,7 +10,6 @@ import com.tesis.demo.model.dto.FieldFilterDto;
 import com.tesis.demo.model.dto.HeatmapDto;
 import com.tesis.demo.model.dto.MapDto;
 import com.tesis.demo.model.dto.WeightedLocDto;
-import com.tesis.demo.model.dto.ZoneFilterDto;
 import com.tesis.demo.model.mapper.FieldFilterMapper;
 import com.tesis.demo.model.mapper.HeatmapMapper;
 import com.tesis.demo.model.mapper.ZoneFilterMapper;
@@ -39,14 +38,15 @@ public class AnalysisService {
 
     public List<WeightedLocDto> createMap(MapDto map) {
         Map savedMap = mapService.save(map);
-        List<FieldFilterDto> savedFieldFilter = fieldFilterService.saveAll(FieldFilterMapper.fieldFiltersDTOsToFieldFilters(map.getFieldFilters()), savedMap);
-        List<ZoneFilterDto> savedZoneFilter = zoneFilterService.saveAll(ZoneFilterMapper.zoneFiltersDTOsToList(map.getZoneFilters()), savedMap);
-        List<Geodata> filteredElements = geodataService.getFilteredElements(map.getFileName(), savedFieldFilter, savedZoneFilter);
-        HeatmapDto heatmap = createHeatmap(map.getName(), filteredElements, map.getFunctionName(), map.getFieldToCalculate(), map.getZoneFilters());
+        List<FieldFilterDto> savedFieldFilters = fieldFilterService.saveAll(FieldFilterMapper.fieldFiltersDTOsToFieldFilters(map.getFieldFilters()), savedMap);
+        zoneFilterService.saveAll(ZoneFilterMapper.zoneFiltersDTOsToList(map.getZoneFilters()), savedMap);
+        List<String> zonesId = new ArrayList<>();
+        List<Geodata> filteredElements = geodataService.getFilteredElementsAndSetZonesId(map.getFileName(), savedFieldFilters, map.getZoneFilters(), zonesId);
+        HeatmapDto heatmap = createHeatmap(map.getName(), filteredElements, map.getFunctionName(), map.getFieldToCalculate(), zonesId);
         return heatmap.getWeightedLocs();
     }
 
-    private HeatmapDto createHeatmap(String name, List<Geodata> geodata, String function, String fieldValueFilterFunction, List<ZoneFilterDto> zoneFilters) {
+    private HeatmapDto createHeatmap(String name, List<Geodata> geodata, String function, String fieldValueFilterFunction, List<String> zonesId) {
         double result = getResult(function, geodata, fieldValueFilterFunction);
         List<WeightedLoc> weightedLocs = new ArrayList<>();
         geodata.forEach(element -> {
@@ -58,6 +58,7 @@ public class AnalysisService {
         Heatmap heatmap = Heatmap.builder()
                 .name(name)
                 .geodata(geodata)
+                .zonesId(zonesId)
                 .weightedLocs(weightedLocs)
                 .creationDate(LocalDateTime.now())
                 .build();

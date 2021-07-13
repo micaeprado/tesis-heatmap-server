@@ -17,7 +17,7 @@ public class ZoneFilterMapper {
         return ZoneFilterDto.builder()
                 .id(zoneFilter.getId())
                 .zone(ZoneMapper.toDto(zoneFilter.getZone()))
-                .filterInside(zoneFilter.getFilterInside())
+                .filterAdd(zoneFilter.getFilterAdd())
                 .map(MapMapper.toDto(zoneFilter.getMap()))
                 .build();
 
@@ -31,7 +31,7 @@ public class ZoneFilterMapper {
         return ZoneFilter.builder()
                 .id(zoneFilterDto.getId())
                 .zone(ZoneMapper.toEntity(zoneFilterDto.getZone()))
-                .filterInside(zoneFilterDto.getFilterInside())
+                .filterAdd(zoneFilterDto.getFilterAdd())
                 .map(MapMapper.toEntity(zoneFilterDto.getMap()))
                 .build();
     }

@@ -18,8 +18,8 @@ public class FieldFilterService {
     private final FieldFilterRepository fieldFilterRepository;
 
     public List<FieldFilterDto> saveAll(List<FieldFilter> fieldFilters, Map map) {
-        if(fieldFilters == null) {
-            return null;
+        if (fieldFilters == null) {
+            return new ArrayList<>();
         }
 
         List<FieldFilterDto> fieldFilterDTOs = new ArrayList<>();

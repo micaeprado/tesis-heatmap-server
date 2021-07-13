@@ -27,11 +27,8 @@ public class ZoneFilter {
     @JsonIgnoreProperties(value = "zoneFilters", allowSetters = true)
     protected Zone zone;
 
-    @Column(name = "filter_inside")
-    protected Boolean filterInside;
-
-    @Column(name = "filter_or")
-    protected Boolean filterOr;
+    @Column(name = "filter_add")
+    protected Boolean filterAdd;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "zoneFilters", allowSetters = true)

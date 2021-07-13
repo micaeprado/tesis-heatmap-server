@@ -1,5 +1,6 @@
 package com.tesis.demo.service;
 
+import com.tesis.demo.model.Geodata;
 import com.tesis.demo.model.dto.PointZoneDto;
 
 import java.util.List;
@@ -100,8 +101,9 @@ public class ComparePoints {
 
     // Returns true if the point p lies
     // inside the polygon[] with n vertices
-    static boolean isInside(List<PointZoneDto> polygon, PointZoneDto p)
+    static boolean isInside(List<PointZoneDto> polygon, Geodata element)
     {
+        PointZoneDto p = PointZoneDto.builder().lat(element.getLat()).lng(element.getLng()).build();
         // There must be at least 3 vertices in polygon[]
         if (polygon.size() < 3)
         {

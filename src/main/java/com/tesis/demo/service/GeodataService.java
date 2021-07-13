@@ -2,7 +2,6 @@ package com.tesis.demo.service;
 
 import com.tesis.demo.model.Geodata;
 import com.tesis.demo.model.dto.FieldFilterDto;
-import com.tesis.demo.model.dto.PointZoneDto;
 import com.tesis.demo.model.dto.ZoneFilterDto;
 import com.tesis.demo.model.enumeration.FilterType;
 import com.tesis.demo.model.enumeration.ObjectType;
@@ -48,22 +47,37 @@ public class GeodataService {
         return geodataDAO.findDistinctByFileNameAndField(name, header);
     }
 
-    public List<Geodata> getFilteredElements(String fileName, List<FieldFilterDto> fieldFilters, List<ZoneFilterDto> zoneFilters) {
+    public List<Geodata> getFilteredElementsAndSetZonesId(String fileName, List<FieldFilterDto> fieldFilters, List<ZoneFilterDto> zoneFilters, List<String> zonesId) {
         Set<Geodata> geodata = geodataRepository.findByFileName(fileName);
 
-        Set<Geodata> newGeodata = geodata;
-        if (zoneFilters != null) {
-            for (ZoneFilterDto zoneFilter : zoneFilters) {
-                newGeodata = getGeodataFilteredByZone(zoneFilter, newGeodata);
-            } // aca implemento lo del + y -
-        }
+        Set<Geodata> geoDataToProcess = new HashSet<>();
+        Set<Geodata> geoDataToNotProcess = new HashSet<>();
 
-        if(fieldFilters != null)  {
-            for (FieldFilterDto fieldFilter : fieldFilters) {
-                newGeodata = filterGeodata(fieldFilter, geodata);
+        for (ZoneFilterDto zoneFilter : zoneFilters) {
+            zonesId.add(zoneFilter.getZone().getId().toString());
+            if (zoneFilter.getFilterAdd()) {
+                geoDataToProcess.addAll(this.getGeodataFilteredByZone(zoneFilter, geodata));
+            } else {
+                geoDataToNotProcess.addAll(this.getGeodataFilteredByZone(zoneFilter, geodata));
             }
         }
-        return new ArrayList<>(newGeodata);
+        geoDataToProcess.removeAll(geoDataToNotProcess);
+
+        for (FieldFilterDto fieldFilter : fieldFilters) {
+            geoDataToProcess = filterGeodata(fieldFilter, geoDataToProcess);
+        }
+
+        return new ArrayList<>(geoDataToProcess);
+    }
+
+    private Set<Geodata> getGeodataFilteredByZone(ZoneFilterDto zoneFilter, Set<Geodata> newGeodata) {
+        Set<Geodata> result = new HashSet<>();
+        for (Geodata element : newGeodata) {
+            if (ComparePoints.isInside(zoneFilter.getZone().getPoints(), element)) {
+                result.add(element);
+            }
+        }
+        return result;
     }
 
     private Set<Geodata> filterGeodata(FieldFilterDto fieldFilter, Set<Geodata> geodata) {
@@ -131,18 +145,5 @@ public class GeodataService {
         }
         return newGeodata;
     }
-
-    private Set<Geodata> getGeodataFilteredByZone(ZoneFilterDto zoneFilter, Set<Geodata> newGeodata) {
-        Set<Geodata> result = new HashSet<>();
-        for (Geodata element:newGeodata) {
-            PointZoneDto point = PointZoneDto.builder().lat(element.getLat()).lng(element.getLng()).build();
-            if ((zoneFilter.getFilterInside() && ComparePoints.isInside(zoneFilter.getZone().getPoints(), point))
-                    || (!zoneFilter.getFilterInside() && !ComparePoints.isInside(zoneFilter.getZone().getPoints(), point))) {
-                result.add(element);
-            }
-        }
-        return result;
-    }
-
 
 }
